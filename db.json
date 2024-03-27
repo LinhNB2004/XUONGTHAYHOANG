@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "name": "Đầm đi học",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 1
+    },
+    {
+      "name": "Dam di hoc",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 5
+    },
+    {
+      "name": "Dam di hoc",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 6
+    },
+    {
+      "name": "Dam di hoc",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 7
+    },
+    {
+      "name": "Dam di hoc",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 11
+    },
+    {
+      "name": "Dam di hoc",
+      "price": 2020000,
+      "description": "Mo ta chi tiet san pham",
+      "id": 12
+    },
+    {
+      "name": "Dam di bar",
+      "price": 100,
+      "description": "Mo ta chi tiet san pham",
+      "id": 13
+    }
+  ]
+}
