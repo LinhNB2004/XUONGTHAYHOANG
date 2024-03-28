@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { validAuth } from "../utils/validAuth.js";
 import { loginSchema, registerSchema } from "../validations/auth.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -14,20 +15,7 @@ export const register = async (req, res, next) => {
      */
 
     const { email, password } = req.body;
-
-    // if (email === "" || password === "") {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Email va password khong duoc de trong!" });
-    // }
-
-    const { error } = registerSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      const errors = error.details.map((item) => item.message);
-      return res.status(400).json({ messages: errors });
-    }
+    validAuth(req.body, registerSchema);
 
     //  B2: Kiem tra email da ton tai chua?
     const checkEmail = await User.findOne({ email });
@@ -64,14 +52,7 @@ export const login = async (req, res, next) => {
      */
 
     const { email, password } = req.body;
-
-    const { error } = loginSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      const errors = error.details.map((item) => item.message);
-      return res.status(400).json({ messages: errors });
-    }
+    validAuth(req.body, loginSchema);
 
     //  B2: Kiem tra email co ton tai khong?
     const userExist = await User.findOne({ email });
