@@ -1,3 +1,5 @@
+import { errorMessages } from "../constants/message";
+
 export const errorHandlerNotFound = (req, res, next) => {
   const error = new Error("Not Found");
   error.status = 404;
@@ -6,7 +8,8 @@ export const errorHandlerNotFound = (req, res, next) => {
 export const errorHandler = (err, req, res) => {
   return res.status(err.status || 500).json({
     error: {
-      message: err.message,
+      name: err.name,
+      message: err.message || errorMessages.ERROR_SERVER,
     },
   });
 };
