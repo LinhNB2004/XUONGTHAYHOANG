@@ -1,4 +1,7 @@
+import { errorMessages, successMessages } from "../constants/message.js";
 import Product from "../models/Product.js";
+import { validBody } from "../utils/validBody.js";
+import productSchema from "../validations/product.js";
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -18,13 +21,18 @@ export const getProducts = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
   try {
     // const { data } = await instance.post("/products", req.body);
+    const resultValid = validBody(req.body, productSchema);
+    if (resultValid) {
+      return res.status(400).json({ message: resultValid.errors });
+    }
+
     const data = await Product.create(req.body);
-    console.log(data);
+    // console.log(data);
     if (!data) {
-      return res.status(400).json({ message: "Them san pham that bai!" });
+      return res.status(400).json({ message: errorMessages.CREATE_FAIL });
     }
     return res.status(201).json({
-      message: "Them san pham thanh cong!",
+      message: successMessages.CREATE_PRODUCT_SUCCESS,
       data,
     });
   } catch (error) {
@@ -37,10 +45,10 @@ export const getProductById = async (req, res, next) => {
     // const { data } = await instance.get(`/products/${req.params.id}`);
     const data = await Product.findById(req.params.id);
     if (!data) {
-      return res.status(400).json({ message: "Lay san pham that bai!" });
+      return res.status(400).json({ message: errorMessages.GET_FAIL });
     }
     return res.status(201).json({
-      message: "Lay san pham thanh cong!",
+      message: successMessages.GET_PRODUCT_SUCCESS,
       data,
     });
   } catch (error) {
@@ -51,14 +59,19 @@ export const getProductById = async (req, res, next) => {
 export const updateProductById = async (req, res, next) => {
   try {
     // const { data } = await instance.put(`/products/${req.params.id}`, req.body);
+    const resultValid = validBody(req.body, productSchema);
+    if (resultValid) {
+      return res.status(400).json({ message: resultValid.errors });
+    }
+
     const data = await Product.findByIdAndUpdate(`${req.params.id}`, req.body, {
       new: true,
     });
     if (!data) {
-      return res.status(400).json({ message: "Cap nhat san pham that bai!" });
+      return res.status(400).json({ message: errorMessages.UPDATE_FAIL });
     }
     return res.status(201).json({
-      message: "Cap nhat san pham thanh cong!",
+      message: successMessages.UPDATE_PRODUCT_SUCCESS,
       data,
     });
   } catch (error) {
@@ -73,12 +86,12 @@ export const removeProductById = async (req, res, next) => {
 
     if (data) {
       return res.status(200).json({
-        message: "Xoa san pham thanh cong!",
+        message: successMessages.DELETE_PRODUCT_SUCCESS,
         data,
       });
     }
     return res.status(400).json({
-      message: "Xoa san pham that bai!",
+      message: errorMessages.DELETE_FAIL,
     });
   } catch (error) {
     next(error);
@@ -100,10 +113,10 @@ export const softRemoveProductById = async (req, res, next) => {
     );
     //! findByIdAndUpdate !== findByIdAndRemove
     if (!data) {
-      return res.status(400).json({ message: "Cap nhat san pham that bai!" });
+      return res.status(400).json({ message: errorMessages.UPDATE_FAIL });
     }
     return res.status(201).json({
-      message: "Cap nhat san pham thanh cong!",
+      message: successMessages.UPDATE_PRODUCT_SUCCESS,
       data,
     });
   } catch (error) {
