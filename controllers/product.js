@@ -1,6 +1,6 @@
 import Product from "../models/Product.js";
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, next) => {
   try {
     // const { data } = await instance.get("/products");
     const data = await Product.find({});
@@ -12,13 +12,10 @@ export const getProducts = async (req, res) => {
     }
     return res.status(404).json({ message: "Khong co san pham nao!" });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
-export const createProduct = async (req, res) => {
+export const createProduct = async (req, res, next) => {
   try {
     // const { data } = await instance.post("/products", req.body);
     const data = await Product.create(req.body);
@@ -31,14 +28,11 @@ export const createProduct = async (req, res) => {
       data,
     });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-export const getProductById = async (req, res) => {
+export const getProductById = async (req, res, next) => {
   try {
     // const { data } = await instance.get(`/products/${req.params.id}`);
     const data = await Product.findById(req.params.id);
@@ -50,14 +44,11 @@ export const getProductById = async (req, res) => {
       data,
     });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-export const updateProductById = async (req, res) => {
+export const updateProductById = async (req, res, next) => {
   try {
     // const { data } = await instance.put(`/products/${req.params.id}`, req.body);
     const data = await Product.findByIdAndUpdate(`${req.params.id}`, req.body, {
@@ -71,22 +62,15 @@ export const updateProductById = async (req, res) => {
       data,
     });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
 // ! Xoá cứng! Không dùng
-export const removeProductById = async (req, res) => {
+export const removeProductById = async (req, res, next) => {
   try {
-    // const { status } = await instance.delete(`/products/${req.params.id}`);
-    const data = await Product.findByIdAndRemove(req.params.id);
-    // console.log(status);
-    // if (status != 200) {
-    //   return res.status(400).json({ message: "Xoa san pham that bai!" });
-    // }
+    const data = await Product.findByIdAndDelete(req.params.id);
+
     if (data) {
       return res.status(200).json({
         message: "Xoa san pham thanh cong!",
@@ -97,19 +81,14 @@ export const removeProductById = async (req, res) => {
       message: "Xoa san pham that bai!",
     });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
 // ! Xoá mềm
 
-export const softRemoveProductById = async (req, res) => {
+export const softRemoveProductById = async (req, res, next) => {
   try {
-    // const params = req.params;
-    // const { data } = await instance.put(`/products/${req.params.id}`, req.body);
     const data = await Product.findByIdAndUpdate(
       `${req.params.id}`,
       {
@@ -128,9 +107,6 @@ export const softRemoveProductById = async (req, res) => {
       data,
     });
   } catch (error) {
-    return res.status(500).json({
-      name: error.name,
-      message: error.message,
-    });
+    next(error);
   }
 };
