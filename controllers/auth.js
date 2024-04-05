@@ -23,10 +23,7 @@ export const register = async (req, res, next) => {
      */
 
     const { email, password } = req.body;
-    const resultValid = validBody(req.body, registerSchema);
-    if (resultValid) {
-      return res.status(400).json({ message: resultValid.errors });
-    }
+
     //  B2: Kiem tra email da ton tai chua?
     const checkEmail = await User.findOne({ email });
     if (checkEmail) {
@@ -78,7 +75,7 @@ export const login = async (req, res, next) => {
     }
 
     //  B4: Tao token -> JWT (JSON Web Token)
-    const token = jwt.sign({ id: userExist._id }, JWT_SECRET, {
+    const token = jwt.sign({ _id: userExist._id }, JWT_SECRET, {
       expiresIn: "30m",
     });
     // console.log(token);
@@ -89,7 +86,7 @@ export const login = async (req, res, next) => {
       message: successMessages.LOGIN_SUCCESS,
       // in ra thông tin token và user
       token,
-      userExist,
+      user: userExist,
     });
   } catch (error) {
     next(error);

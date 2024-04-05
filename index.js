@@ -3,23 +3,15 @@ import router from "./routes/index.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import { errorHandler, errorHandlerNotFound } from "./utils/errorHandlers.js";
-import dotenv from "dotenv";
-
-dotenv.config({
-  path: "./.env.local",
-});
-const { PORT, DB_URI } = process.env;
-
+import { PORT } from "./utils/env.js";
+import connect from "./utils/connect.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(DB_URI).then(() => {
-  console.log("Connected to MongoDB!");
-});
-
 app.use("/api", router);
 
+connect();
 // Error handling 404
 
 app.use(errorHandlerNotFound, errorHandler);

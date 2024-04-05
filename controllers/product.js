@@ -21,10 +21,6 @@ export const getProducts = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
   try {
     // const { data } = await instance.post("/products", req.body);
-    const resultValid = validBody(req.body, productSchema);
-    if (resultValid) {
-      return res.status(400).json({ message: resultValid.errors });
-    }
 
     const data = await Product.create(req.body);
     // console.log(data);
@@ -59,10 +55,6 @@ export const getProductById = async (req, res, next) => {
 export const updateProductById = async (req, res, next) => {
   try {
     // const { data } = await instance.put(`/products/${req.params.id}`, req.body);
-    const resultValid = validBody(req.body, productSchema);
-    if (resultValid) {
-      return res.status(400).json({ message: resultValid.errors });
-    }
 
     const data = await Product.findByIdAndUpdate(`${req.params.id}`, req.body, {
       new: true,
