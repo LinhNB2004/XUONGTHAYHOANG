@@ -6,6 +6,7 @@ import { loginSchema, registerSchema } from "../validations/auth.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { generateToken } from "../utils/jwt.js";
 
 dotenv.config({
   path: "./.env.local",
@@ -63,25 +64,25 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ message: resultValid.errors });
     }
 
-    //  B2: Kiem tra email co ton tai khong?
+    //!  B2: Kiem tra email co ton tai khong?
     const userExist = await User.findOne({ email });
     if (!userExist) {
       return res.status(400).json({ message: errorMessages.EMAIL_NOT_FOUND });
     }
 
-    //  B3: Kiem tra password co khop khong?
+    //!  B3: Kiem tra password co khop khong?
     if (await comparePassword(password, userExist.password)) {
       return res.status(400).json({ message: errorMessages.INVALID_PASSWORD });
     }
 
-    //  B4: Tao token -> JWT (JSON Web Token)
-    const token = jwt.sign({ _id: userExist._id }, JWT_SECRET, {
-      expiresIn: "30m",
-    });
-    // console.log(token);
+    //!  B4: Tao token -> JWT (JSON Web Token)
+    const token = generateToken({ _id: userExist._id }, "10d");
+    // console.logs(token);
 
-    //  B5: Tra ve token cho client
-    userExist.password = undefined; // k in password ra
+    //!  B5: Tra ve token cho client
+    userExist.password = undefined;
+
+    // k in password ra
     return res.status(201).json({
       message: successMessages.LOGIN_SUCCESS,
       // in ra thông tin token và user

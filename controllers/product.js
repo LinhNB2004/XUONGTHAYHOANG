@@ -1,4 +1,5 @@
 import { errorMessages, successMessages } from "../constants/message.js";
+import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 import { validBody } from "../utils/validBody.js";
 import productSchema from "../validations/product.js";
@@ -6,7 +7,7 @@ import productSchema from "../validations/product.js";
 export const getProducts = async (req, res, next) => {
   try {
     // const { data } = await instance.get("/products");
-    const data = await Product.find({});
+    const data = await Product.find({}).populate("category");
     if (data && data.length > 0) {
       return res.status(200).json({
         message: "Lay danh sach san pham thanh cong!",
@@ -24,7 +25,15 @@ export const createProduct = async (req, res, next) => {
 
     const data = await Product.create(req.body);
     // console.log(data);
-    if (!data) {
+    const updateCategory = await Category.findByIdAndUpdate(
+      data.category,
+      {
+        $push: { products: data._id },
+      },
+      { new: true }
+    );
+
+    if (!data || !updateCategory) {
       return res.status(400).json({ message: errorMessages.CREATE_FAIL });
     }
     return res.status(201).json({
@@ -39,7 +48,7 @@ export const createProduct = async (req, res, next) => {
 export const getProductById = async (req, res, next) => {
   try {
     // const { data } = await instance.get(`/products/${req.params.id}`);
-    const data = await Product.findById(req.params.id);
+    const data = await Product.findById(req.params.id).populate("category");
     if (!data) {
       return res.status(400).json({ message: errorMessages.GET_FAIL });
     }
@@ -59,7 +68,15 @@ export const updateProductById = async (req, res, next) => {
     const data = await Product.findByIdAndUpdate(`${req.params.id}`, req.body, {
       new: true,
     });
-    if (!data) {
+    const updateCategory = await Category.findByIdAndUpdate(
+      data.category,
+      {
+        $push: { products: data._id },
+      },
+      { new: true }
+    );
+
+    if (!data || !updateCategory) {
       return res.status(400).json({ message: errorMessages.UPDATE_FAIL });
     }
     return res.status(201).json({
