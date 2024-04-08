@@ -8,11 +8,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { generateToken } from "../utils/jwt.js";
 
-dotenv.config({
-  path: "./.env.local",
-});
-const { JWT_SECRET } = process.env;
-
 export const register = async (req, res, next) => {
   try {
     /**

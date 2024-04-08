@@ -3,8 +3,10 @@ import router from "./routes/index.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import { errorHandler, errorHandlerNotFound } from "./utils/errorHandlers.js";
+
 import { PORT } from "./utils/env.js";
 import connect from "./utils/connect.js";
+
 const app = express();
 app.use(cors());
 app.use(express.json());
