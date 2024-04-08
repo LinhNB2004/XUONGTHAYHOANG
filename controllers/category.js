@@ -1,5 +1,6 @@
 import { errorMessages, successMessages } from "../constants/message.js";
 import Category from "../models/Category.js";
+import Product from "../models/Product.js";
 
 export const getCategories = async (req, res, next) => {
   try {
@@ -77,6 +78,13 @@ export const removeCategoryById = async (req, res, next) => {
     }
 
     // ! cap nhat lại san pham cho danh muc bị xoá
+    const productsToUpdate = await Product.find({ category: req.params.id });
+    await Promise.all(
+      productsToUpdate.map(async (product) => {
+        product.category = "661145aef18e654f837c6fd9";
+        await product.save();
+      })
+    );
 
     const data = await Category.findByIdAndDelete(req.params.id);
     if (data) {
